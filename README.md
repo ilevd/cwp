@@ -2,6 +2,9 @@
 
 ![alt words-count](doc/imgs/words-count.png)
 
+
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.ilevd/cwp.svg)](https://clojars.org/org.clojars.ilevd/cwp)
+
 Indentation-based syntax for Clojure.
 
 The first place to land for those who would like to deep into practical dynamic functional programming language - Clojure,
