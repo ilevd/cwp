@@ -24,26 +24,10 @@ Being just a syntax for Clojure, it provides what Clojure has:
 In a nutshell it's a transpiler and a Leiningen plugin.
 
 ## Example
+Data manipulation 
 
-```ruby
-def users: [{:name to "John",  :age to 20}
-            {:name to "Anna",  :age to 32}
-            {:name to "Smith", :age to 27}]
+![alt users](doc/imgs/users.png)
 
-def avg-age(users):
-  let ages to users |>> map(:age)
-                    |>> reduce(+):
-    ages / count(users) |> double
-
-def greetings(users):
-  let names to users |>> map(:name)
-                     |>> str/join(", "):
-    str("Hello, ", names, "!")
-
-println(avg-age(users))
-println(greetings(users))
-
-```
 
 ## Documentation
 * [Overview](doc/overview.md)
