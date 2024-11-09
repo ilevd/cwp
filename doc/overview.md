@@ -1,0 +1,195 @@
+## Overview
+
+### Simple primitives with examples
+
+Boolean: `true`, `false`
+
+Null: `nil`
+
+Number: `1`, `1.0`, `1/3`, `0xF`, `1e4`, `012`
+
+String: `"Hello\nworld"`
+
+Character: `\a`, `\newline`
+
+Keyword: `:name`, `::keyword`
+
+Keyword (like `:name`) - is syntax sugar for creation an Object that contains the string itself. 
+They are mostly used as keys in map objects, e.g.: 
+```clojure
+{:name "John", :age 20}
+```
+
+### Infix operators
+
+| Operator                |       Description        |   
+|-------------------------|:------------------------:|
+| \|>,  \|>>              |           pipe           |
+| or, and                 |         boolean          |
+| =, ==, !=, >, <, >=, <= |        comparison        |
+| +, -                    |     sum, subtraction     |
+| *, /                    | multiplication, division |
+
+
+### Comments
+C/Java-like:
+```
+// my comment
+```
+
+
+### Source file/namespace structure
+
+Clojure source file, and thus CWP usually consists of namespace declaration in the beginning:
+
+```ruby
+ns my-project.core
+```
+To import other namespaces, there is `:require` block. And to import Java classes - `:import`:
+```ruby
+ns my-proj.core
+    require:
+        [clojure.str :as str]
+        [clojure.walk :as walk]
+        [clojure.edn :as edn]
+    import: [com.some-proj SomeClass]
+```
+Below that declaration started with `def` usually follow.
+
+
+### Data structures declaration
+List:
+```ruby 
+list(1, 2, 3)
+```
+
+Vector:
+```clojure
+[1, 2, 3]
+```
+
+Map:
+```ruby
+{:name to "John",
+ :age  to 20}
+```
+
+Set:
+```clojure 
+#{1, 2, 3}
+```
+
+### Optionality of separators
+Separators `to` and comma `,` are equivalents and in most cases can be omitted.
+For example previous map data structure can be written simply as:
+```clojure 
+{:name "John" 
+ :age  20}
+```
+But in some cases they improve readability, e.g.:
+```ruby
+let a to 10 + 20,
+    b to a * 10:
+  println(a, b)
+```
+
+And they also are necessary in cases where you want to break expression with operators.
+Thus, this is a vector with one expression:
+```clojure
+[10 + 20]
+```
+And this is a vector with 3 expressions:
+```clojure
+[10, +,  20]
+```
+Despite `to` and comma `,` are equivalents, it's recommended to use:
+* comma `,` to separate pairs in maps, values in vectors and sets etc.
+* `to`to separate key and value in map pair, definitions in structures like `let` etc.
+
+### Declarations
+Simple function declarations:
+```ruby
+def add(a, b): a + b
+
+def print-greeting(s): 
+  println(str("Hello, ", s, "!"))
+    
+def print-hi(): 
+  print("Hi")      
+```
+When using without parentheses `def` defines top-level value, that can be considered as a constant, e.g.:
+
+```ruby
+def hello: "Hello, world"
+
+def error-code: -1
+```
+### Anonymous functions
+`fn` and `lambda` are equivalents:
+```ruby 
+map(fn x: x + 2, [1,2,3,4,5]) //  => (3 4 5 6 7)
+
+filter(lambda x: x > 3, [1,2,3,4,5]) // => (4 5)
+```
+
+
+
+### Control code structures
+
+#### let
+```ruby
+let a to 10, b to 20, c to a + b: println(c)
+```
+
+#### if-else
+```ruby
+if 10 > 5: println("Yes")
+else: println("No")
+```
+if there is only one expression after if/else `:` can be omitted:
+```ruby
+if 10 > 5 println("Yes") else println("No")
+```
+
+#### try-catch
+```ruby 
+try:
+  10 / 0
+catch Exception e: 
+  println("Division by zero!")
+```
+
+#### case
+```ruby
+case val:
+  10 to println("ten")
+  20 to println("twenty")
+  println("Something else")
+```
+
+There are other structures as: `while`, `cond`, `condp`, `doseq`, `dotimes` etc.
+
+You can use a function or a macro from another namespace in a style of a control structure.
+To do that, add `flat`, `map` or `vec` block in a namespace declaration.
+E.g. to use built-in Clojure `str` function with that style:
+
+```ruby
+ns my-server.core
+  flat: str
+
+str "Hello":
+  "John"
+  "Angela"
+  "Smith"  
+```
+Result will be: `"HelloJohnAngelaSmith"`
+
+In general, having imported function `my-fn`, with `flat`, for code:
+```ruby
+my-fn val1 val2:
+  val3
+  val4
+```
+* generated Clojure code will be:  `(my-fn val1 val2 val3 val4)`
+* when using `vec` generated Clojure code will be: `(my-fn [val1 val2] val3 val4)`
+* when using `map` generated Clojure code will be: `(my-fn {val1 val2} val3 val4)`
