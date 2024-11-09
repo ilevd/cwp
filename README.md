@@ -5,9 +5,9 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.ilevd/cwp.svg)](https://clojars.org/org.clojars.ilevd/cwp)
 
-Indentation-based syntax for Clojure.
+Indentation-based syntax for [Clojure](https://clojure.org/).
 
-The first place to land for those who would like to deep into practical dynamic functional programming language - Clojure,
+It is a project for those, who would like to deep into practical dynamic functional programming language - Clojure,
 but **don't like parentheses**. It provides familiar syntax, so it's easy to switch to it, from e.g. Python.
 
 Features:
@@ -21,7 +21,7 @@ Being just a syntax for Clojure, it provides what Clojure has:
 * Concurrent primitives
 * Clojure/Java (JVM) ecosystem with a lot of libraries
 
-In a nutshell it's a transpiler and a Leiningen plugin.
+It's a transpiler and a [Leiningen](https://leiningen.org/) plugin.
 
 ## Example
 Data manipulation 
@@ -37,13 +37,13 @@ Data manipulation
 
 Add to `project.clj` :plugins section:
 ```edn
-  [cwp "<actual_version>"]
+[org.clojars.ilevd/cwp  "<actual_version>"] 
 ```
 
 Add to `project.clj` builds info:
 ```edn 
-  :cwp {:builds [{:in  "src-cwp"
-                  :out "src-out"}]}
+:cwp {:builds [{:in  "src-cwp"
+                :out "src-out"}]}
 ```
 `:in` - folder where CWP sources are,
 `:out` - folder for generated Clojure code
