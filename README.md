@@ -1,13 +1,6 @@
 # cwp
 
-
-```ruby 
-def words-count(s):
-  s |>> re-seq(#"\w+")
-    |>> frequencies
-    |>> sort-by(second, >)
-    |>> run!(lambda [w, n]: println(w, "-", n))
-```
+![alt words-count](doc/imgs/words-count.png)
 
 Indentation-based syntax for Clojure.
 
