@@ -23,11 +23,15 @@ Being just a syntax for Clojure, it provides what Clojure has:
 
 It's a transpiler and a [Leiningen](https://leiningen.org/) plugin.
 
-## Example
+## Examples
 Data manipulation 
 
 ![alt users](doc/imgs/users.png)
 
+Some function from [clojure.core](https://github.com/clojure/clojure/blob/clojure-1.11.1/src/clj/clojure/core.clj#L7918)
+rewritten with CWP
+
+![alt users](doc/imgs/load-data-reader-file.png)
 
 ## Documentation
 * [Overview](doc/overview.md)
