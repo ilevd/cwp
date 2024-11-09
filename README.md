@@ -1,6 +1,6 @@
 # cwp
 
-<img src="doc/imgs/words-count.png" width="427" height="116">
+![alt words-count](doc/imgs/words-count.png)
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.ilevd/cwp.svg)](https://clojars.org/org.clojars.ilevd/cwp)
 
