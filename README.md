@@ -40,8 +40,8 @@ def greetings(users):
                      |>> str/join(", "):
     str("Hello, ", names, "!")
 
-println(avg-age(users))   // 26.33333333333333
-println(greetings(users)) // Hello, John, Anna, Smith!
+println(avg-age(users))
+println(greetings(users))
 
 ```
 
