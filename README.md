@@ -57,6 +57,8 @@ Files extensions mapping:
 * `.cws` -> `.cljs`
 * `.cwc` -> `.cljc`
 
+Run: `lein cwp`
+
 After that you can compile Clojure code to `.jar`.
 
 
