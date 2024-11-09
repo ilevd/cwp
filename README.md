@@ -64,7 +64,12 @@ Add to `project.clj` builds info:
 `:in` - folder where CWP sources are,
 `:out` - folder for generated Clojure code
 
-After that you can compile Clojure code to .jar.
+Files extensions mapping:
+* `.cw` -> `.clj`
+* `.cws` -> `.cljs`
+* `.cwc` -> `.cljc`
+
+After that you can compile Clojure code to `.jar`.
 
 
 ## License
