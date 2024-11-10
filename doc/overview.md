@@ -16,7 +16,7 @@ Keyword: `:name`, `::keyword`
 
 Keyword (like `:name`) - is syntax sugar for creation an Object that contains the string itself. 
 They are mostly used as keys in map objects, e.g.: 
-```clojure
+```scala
 {:name "John", :age 20}
 ```
 
@@ -42,11 +42,11 @@ C/Java-like:
 
 Clojure source file, and thus CWP usually consists of namespace declaration in the beginning:
 
-```ruby
+```scala
 ns my-project.core
 ```
 To import other namespaces, there is `:require` block. And to import Java classes - `:import`:
-```ruby
+```scala
 ns my-proj.core
     require:
         [clojure.str :as str]
@@ -59,35 +59,35 @@ Below that declaration started with `def` usually follow.
 
 ### Data structures declaration
 List:
-```ruby 
+```scala 
 list(1, 2, 3)
 ```
 
 Vector:
-```clojure
+```scala
 [1, 2, 3]
 ```
 
 Map:
-```ruby
+```scala
 {:name to "John",
  :age  to 20}
 ```
 
 Set:
-```clojure 
+```scala 
 #{1, 2, 3}
 ```
 
 ### Optionality of separators
 Separators `to` and comma `,` are equivalents and in most cases can be omitted.
 For example previous map data structure can be written simply as:
-```clojure 
+```scala 
 {:name "John" 
  :age  20}
 ```
 But in some cases they improve readability, e.g.:
-```ruby
+```scala
 let a to 10 + 20,
     b to a * 10:
   println(a, b)
@@ -95,11 +95,11 @@ let a to 10 + 20,
 
 And they also are necessary in cases where you want to break expression with operators.
 Thus, this is a vector with one expression:
-```clojure
+```scala
 [10 + 20]
 ```
 And this is a vector with 3 expressions:
-```clojure
+```scala
 [10, +,  20]
 ```
 Despite `to` and comma `,` are equivalents, it's recommended to use:
@@ -108,7 +108,7 @@ Despite `to` and comma `,` are equivalents, it's recommended to use:
 
 ### Declarations
 Simple function declarations:
-```ruby
+```scala
 def add(a, b): a + b
 
 def print-greeting(s): 
@@ -119,14 +119,14 @@ def print-hi():
 ```
 When using without parentheses `def` defines top-level value, that can be considered as a constant, e.g.:
 
-```ruby
+```scala
 def hello: "Hello, world"
 
 def error-code: -1
 ```
 ### Anonymous functions
 `fn` and `lambda` are equivalents:
-```ruby 
+```scala 
 map(fn x: x + 2, [1,2,3,4,5]) //  => (3 4 5 6 7)
 
 filter(lambda x: x > 3, [1,2,3,4,5]) // => (4 5)
@@ -137,22 +137,22 @@ filter(lambda x: x > 3, [1,2,3,4,5]) // => (4 5)
 ### Control code structures
 
 #### let
-```ruby
+```scala
 let a to 10, b to 20, c to a + b: println(c)
 ```
 
 #### if-else
-```ruby
+```scala
 if 10 > 5: println("Yes")
 else: println("No")
 ```
 if there is only one expression after if/else `:` can be omitted:
-```ruby
+```scala
 if 10 > 5 println("Yes") else println("No")
 ```
 
 #### try-catch
-```ruby 
+```scala 
 try:
   10 / 0
 catch Exception e: 
@@ -160,7 +160,7 @@ catch Exception e:
 ```
 
 #### case
-```ruby
+```scala
 case val:
   10 to println("ten")
   20 to println("twenty")
@@ -173,7 +173,7 @@ You can use a function or a macro from another namespace in a style of a control
 To do that, add `flat`, `map` or `vec` block in a namespace declaration.
 E.g. to use built-in Clojure `str` function with that style:
 
-```ruby
+```scala
 ns my-server.core
   flat: str
 
@@ -185,7 +185,7 @@ str "Hello":
 Result will be: `"HelloJohnAngelaSmith"`
 
 In general, having imported function `my-fn`, with `flat`, for code:
-```ruby
+```scala
 my-fn val1 val2:
   val3
   val4
