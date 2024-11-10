@@ -25,14 +25,26 @@ It's a transpiler and a [Leiningen](https://leiningen.org/) plugin.
 ## Examples
 Data manipulation 
 
-![alt users](doc/imgs/users.png)
+```scala 
+def users: [{:name to "John",  :age to 20}
+            {:name to "Anna",  :age to 32}
+            {:name to "Smith", :age to 27}]
 
-Some function from [clojure.core](https://github.com/clojure/clojure/blob/clojure-1.11.1/src/clj/clojure/core.clj#L7918)
-rewritten with CWP
+def avg-age(users):
+  let ages to users |>> map(:age)
+                    |>> reduce(+):
+    ages / count(users) |> double
 
-![alt users](doc/imgs/load-data-reader-file.png)
+def greetings(users):
+  let names to users |>> map(:name)
+                     |>> str/join(", "):
+    str("Hello, ", names, "!")
 
-Simple HTTP server with [HttpKit](https://github.com/http-kit/http-kit),
+println(avg-age(users))
+println(greetings(users))
+```
+
+Simple HTTP server with [http-kit](https://github.com/http-kit/http-kit),
 [Hiccup](https://github.com/weavejester/hiccup) and [Ring](https://github.com/ring-clojure/ring)
 
 ```scala 
@@ -61,6 +73,38 @@ run-server(app |> kparams/wrap-keyword-params
                |> params/wrap-params,
            {:port 8080})
 ```
+
+Some function from [clojure.core](https://github.com/clojure/clojure/blob/clojure-1.11.1/src/clj/clojure/core.clj#L7918)
+rewritten with CWP
+
+```scala
+def load-data-reader-file(mappings, ^java.net.URL url):
+  with-open rdr to clojure.lang.LineNumberingPushbackReader.(
+                     java.io.InputStreamReader.(
+                       .openStream(url), "UTF-8")):
+    binding *file* to .getFile(url):
+      let read-opts to if .endsWith(.getPath(url), "cljc"):
+                         {:eof nil :read-cond :allow}
+                       else {:eof nil}
+          new-mappings to read(read-opts, rdr):
+        if not map?(new-mappings):
+          throw ex-info(str("Not a valid data-reader map"), {:url url})
+        reduce(fn m, [k, v]:
+                  if not symbol?(k):
+                    throw ex-info(str("Invalid form in data-reader file"),
+                                  {:url url
+                                   :form k})
+                  let v-var to data-reader-var(v):
+                    if contains?(mappings, k) and mappings(k) != v-var:
+                      throw ex-info("Conflicting data-reader mapping",
+                                    {:url      url
+                                     :conflict k
+                                     :mappings m})
+                    assoc(m, k, v-var),
+               mappings,
+               new-mappings)
+```
+
 
 ## Documentation
 * [Overview](doc/overview.md)
