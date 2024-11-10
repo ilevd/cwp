@@ -54,10 +54,10 @@ ns my-proj.core
         [clojure.edn :as edn]
     import: [com.some-proj SomeClass]
 ```
-Below that declaration started with `def` usually follow.
+Below that declarations started with `def` usually follow.
 
 
-### Data structures declaration
+### Data structures
 List:
 ```scala 
 list(1, 2, 3)
