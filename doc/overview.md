@@ -184,7 +184,7 @@ str "Hello":
 ```
 Result will be: `"HelloJohnAngelaSmith"`
 
-In general, having imported function `my-fn`, with `flat`, for code:
+In general, when adding imported function `my-fn` to `flat` block, for code:
 ```scala
 my-fn val1 val2:
   val3
