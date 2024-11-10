@@ -193,3 +193,22 @@ my-fn val1 val2:
 * generated Clojure code will be:  `(my-fn val1 val2 val3 val4)`
 * when using `vec` generated Clojure code will be: `(my-fn [val1 val2] val3 val4)`
 * when using `map` generated Clojure code will be: `(my-fn {val1 val2} val3 val4)`
+
+### Clojure code
+Sometimes it can be necessary to insert Clojure code.
+Supposing some library has function `to` (`to` is used as separator) and it needs to be used.
+For that purpose there are triple quotes:
+
+```scala 
+def run(arg1, arg2):
+  """to"""(arg1, arg2)
+```
+It's possible to insert big Clojure blocks:
+```scala 
+"""
+(defn hello [user]
+  (println "Hello," user))
+"""
+
+hello("User")
+```
