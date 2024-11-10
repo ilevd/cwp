@@ -127,7 +127,7 @@ def error-code: -1
 ### Anonymous functions
 `fn` and `lambda` are equivalents:
 ```scala 
-map(fn x: x + 2, [1,2,3,4,5]) //  => (3 4 5 6 7)
+map(fn x: x + 2, [1,2,3,4,5]) // => (3 4 5 6 7)
 
 filter(lambda x: x > 3, [1,2,3,4,5]) // => (4 5)
 ```
