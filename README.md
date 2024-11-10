@@ -117,7 +117,7 @@ Add to `project.clj` :plugins section:
 [org.clojars.ilevd/cwp  "<actual_version>"] 
 ```
 
-Add to `project.clj` builds info:
+Add builds info to `project.clj` root:
 ```edn 
 :cwp {:builds [{:in  "src-cwp"
                 :out "src-out"}]}
