@@ -32,6 +32,35 @@ rewritten with CWP
 
 ![alt users](doc/imgs/load-data-reader-file.png)
 
+Simple HTTP server with [HttpKit](https://github.com/http-kit/http-kit),
+[Hiccup](https://github.com/weavejester/hiccup) and [Ring](https://github.com/ring-clojure/ring)
+
+```scala 
+ns test-expo.server
+    require: [ring.middleware.params :as params]
+             [ring.middleware.keyword-params :as kparams]
+             [org.httpkit.server :refer [run-server]]
+             [hiccup2.core :as h]
+
+def fruits: ["Banana", "Apple", "Lemon"]
+
+def get-html(user):
+  [:div
+    [:p {:style {:font-weight :bold}} str("Hello, ", user or "User", "!")]
+    "Fruits:"
+    for fruit to fruits:
+      [:p {} fruit]]
+  |> h/html |> str
+
+def app(req):
+ {:status  200
+  :headers {"Content-Type" "text/html"}
+  :body    get-html(req |> :params |> :name)}
+
+run-server(app |> kparams/wrap-keyword-params |> params/wrap-params,
+           {:port 8080})
+```
+
 ## Documentation
 * [Overview](doc/overview.md)
 
