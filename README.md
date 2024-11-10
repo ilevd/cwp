@@ -36,7 +36,7 @@ Simple HTTP server with [HttpKit](https://github.com/http-kit/http-kit),
 [Hiccup](https://github.com/weavejester/hiccup) and [Ring](https://github.com/ring-clojure/ring)
 
 ```scala 
-ns test-expo.server
+ns my-project.server
     require: [ring.middleware.params :as params]
              [ring.middleware.keyword-params :as kparams]
              [org.httpkit.server :refer [run-server]]
