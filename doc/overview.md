@@ -153,7 +153,7 @@ let a to 10, b to 20, c to a + b: println(c)
 if 10 > 5: println("Yes")
 else: println("No")
 ```
-if there is only one expression after if/else `:` can be omitted:
+if there is only one expression after if/else colon `:` can be omitted:
 ```scala
 if 10 > 5 println("Yes") else println("No")
 ```
