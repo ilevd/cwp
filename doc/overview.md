@@ -27,9 +27,16 @@ They are mostly used as keys in map objects, e.g.:
 | \|>,  \|>>              |           pipe           |
 | or, and                 |         boolean          |
 | =, ==, !=, >, <, >=, <= |        comparison        |
-| +, -                    |     sum, subtraction     |
+| +, -                    |  addition, subtraction   |
 | *, /                    | multiplication, division |
 
+
+### Parentheses
+Parentheses are used for setting precedence:
+```scala
+10 * 2 + 3   // => 23
+10 * (2 + 3) // => 50
+```
 
 ### Comments
 C/Java-like:
