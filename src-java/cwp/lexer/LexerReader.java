@@ -3,7 +3,6 @@ package cwp.lexer;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import cwp.ast.Expr;
 import cwp.lexer.readers.*;
 import cwp.lexer.readers.Number;
 
@@ -107,7 +106,7 @@ public class LexerReader {
                     case '}':
                         return new Token(Token.Type.RCURLY, "}", null, line, column);
                     case ':':
-                        if (Character.isWhitespace(r.cur())) {
+                        if (Character.isWhitespace(r.cur()) || r.cur() == -1) {
                             return new Token(Token.Type.COLON, ":", null, line, column);
                         }
                         break;

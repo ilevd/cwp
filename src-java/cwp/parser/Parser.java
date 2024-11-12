@@ -174,8 +174,7 @@ public class Parser {
         Expr e = readInfixExpr(t, LOWEST);
         //System.out.println(">>>> " + e);
         if (e == null) {
-            throw Util.sneakyThrow(new ParserException("Unexpected token: " + t.str +
-                    " , at: " + t.line + ", " + t.column));
+            throw Util.sneakyThrow(new ParserException("Unexpected token: " + t.str, t));
         }
         return e;
     }
@@ -202,6 +201,7 @@ public class Parser {
 
     public Expr readInfixExpr(Token t, int prevPrecedence) {
         Expr firstExpr = readUnaryExpr(t);
+        if (firstExpr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
         Token opToken = nextTokenWithSep();
         MultiInfixExpr mExpr = new MultiInfixExpr(firstExpr.initTok, opToken, firstExpr);
         for (; ; ) {
@@ -223,7 +223,9 @@ public class Parser {
     public Expr readUnaryExpr(Token t) {
         if (t.type == Token.Type.META) {
             Expr meta = readExpr();
+            if (meta.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             Expr expr = readExpr();
+            if (expr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             return new WithMetaExpr(t, meta, expr);
         }
         if (t.type == Token.Type.DEREF ||
@@ -231,12 +233,14 @@ public class Parser {
                 t.type == Token.Type.UNQUOTE ||
                 t.type == Token.Type.SYNTAX_QUOTE) {
             Expr nextExpr = readExpr();
+            if (nextExpr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             return new UnaryExpr(t, nextExpr);
         }
         if (t.type == Token.Type.SYMBOL &&
                 (t.str.equals("not")) ||
                 (t.str.equals("throw"))) {
             Expr nextExpr = readExpr();
+            if (nextExpr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             return new UnaryExpr(t, nextExpr, true);
         }
         //return readBaseExpr(t);
@@ -248,7 +252,7 @@ public class Parser {
         while (e != null && e.callable) {
             Token nextTok = nextToken();
             if (nextTok.type != Token.Type.LPAREN) {
-                throw Util.sneakyThrow(new ParserException("After callable should be '('"));
+                throw Util.sneakyThrow(new ParserException("After callable should be '('", nextTok));
             }
             DelimitedListResult d = readDelimitedList(Token.Type.RPAREN);
             e = new FunctionCallExpr(e, d.a, d.last.initTok.callable);
@@ -273,21 +277,21 @@ public class Parser {
         if (t.type == Token.Type.LCURLY) {
             DelimitedListResult res = readDelimitedList(Token.Type.RCURLY);
             if (res.a.size() % 2 != 0) {
-                throw Util.sneakyThrow(new ParserException("Map literal must have even number of forms"));
+                throw Util.sneakyThrow(new ParserException("Map literal must have even number of forms", t));
             }
             return new MapExpr(t, res.a, res.last.initTok.callable);
         }
         if (t.type == Token.Type.NAMESPACE_MAP) {
             DelimitedListResult res = readDelimitedList(Token.Type.RCURLY);
             if (res.a.size() % 2 != 0) {
-                throw Util.sneakyThrow(new ParserException("Map literal must have even number of forms"));
+                throw Util.sneakyThrow(new ParserException("Map literal must have even number of forms", t));
             }
             return new MapExpr(t, res.a, res.last.initTok.callable);
         }
         if (t.type == Token.Type.CONDITIONAL) {
             DelimitedListResult res = readDelimitedList(Token.Type.RPAREN);
             if (res.a.size() % 2 != 0) {
-                throw Util.sneakyThrow(new ParserException("Conditional must have even number of forms"));
+                throw Util.sneakyThrow(new ParserException("Conditional must have even number of forms", t));
             }
             return new ConditionalExpr(t, res.a, res.last.initTok.callable);
         }
@@ -303,6 +307,10 @@ public class Parser {
             DelimitedListResult res = readDelimitedList(Token.Type.RPAREN);
             return new ParensExpr(t, res.a, res.last.initTok.callable);
         }
+        if (t.type == Token.Type.EOF){
+            throw Util.runtimeException("EOF while reading");
+        }
+        Util.sneakyThrow(new ParserException("Unexpected token: " + t.str, t));
         return null;
     }
 
@@ -364,11 +372,13 @@ public class Parser {
             metas.add(expr);
         }
         if (nameTok.type != Token.Type.SYMBOL) {
-            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected symbol, not: " + nameTok.str));
+            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected symbol, not: " + nameTok.str,
+                    nameTok));
         }
         Token colonOrLBrace = nextToken();
         if (colonOrLBrace.type != Token.Type.LPAREN && colonOrLBrace.type != Token.Type.COLON) {
-            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected `(` or `:`, not: " + colonOrLBrace.str));
+            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected `(` or `:`, not: " + colonOrLBrace.str,
+                    colonOrLBrace));
         }
         if (colonOrLBrace.type == Token.Type.LPAREN) {
             isFunction = true;
@@ -377,7 +387,8 @@ public class Parser {
             colonOrLBrace = nextToken();
         }
         if (colonOrLBrace.type != Token.Type.COLON) {
-            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected `:`, not: " + colonOrLBrace.str));
+            throw Util.sneakyThrow(new ParserException("Bad 'def' declaration, expected `:`, not: " + colonOrLBrace.str,
+                    colonOrLBrace));
         }
         body = readBlock(initTok);
         DefExpr defExpr = new DefExpr(initTok, nameTok, isFunction, metas, args, body);
@@ -388,8 +399,7 @@ public class Parser {
     public TryCatchFinallyExpr readTryCatchFinally(Token initTok) {
         Token nextTok = nextToken();
         if (nextTok.type != Token.Type.COLON) {
-            throw Util.sneakyThrow(new ParserException("Expected ':', but got:" + nextTok.str + " , at: " + nextTok.line + ", " +
-                    nextTok.column));
+            throw Util.sneakyThrow(new ParserException("Expected ':', but got: " + nextTok.str, nextTok));
         }
         ArrayList<Expr> body = readBlock(initTok);
         ArrayList<CatchExpr> catches = new ArrayList<CatchExpr>();
@@ -411,8 +421,7 @@ public class Parser {
             Token finallyTok = nextTok;
             nextTok = nextToken();
             if (nextTok.type != Token.Type.COLON) {
-                throw Util.sneakyThrow(new ParserException("Expected ':', but got:" + nextTok.str + " , at: " + nextTok.line + ", " +
-                        nextTok.column));
+                throw Util.sneakyThrow(new ParserException("Expected ':', but got:" + nextTok.str, nextTok));
             }
             finallyExpr = readBlock(finallyTok);
         } else {
@@ -426,20 +435,19 @@ public class Parser {
     public CatchExpr readCatch(Token initTok) {
         Token exceptionType = nextToken();
         if (exceptionType.type != Token.Type.SYMBOL) {
-            throw Util.sneakyThrow(new ParserException("Expected exception type, but got:" + exceptionType.str +
-                    " , at: " + exceptionType.line + ", " + exceptionType.column));
+            throw Util.sneakyThrow(new ParserException("Expected exception type, but got:" + exceptionType.str,
+                    exceptionType));
         }
         Token exceptionName = nextToken();
         //System.out.println(">>> Catch exType: " + exceptionType.str + " " + exceptionType.type);
         //System.out.println(">>> Catch exName: " + exceptionName.str + " " + exceptionName.type);
         if (exceptionName.type != Token.Type.SYMBOL) {
-            throw Util.sneakyThrow(new ParserException("Expected exception name, but got:" + exceptionName.str +
-                    " , at: " + exceptionName.line + ", " + exceptionName.column));
+            throw Util.sneakyThrow(new ParserException("Expected exception name, but got:" + exceptionName.str,
+                    exceptionName));
         }
         Token nextToken = nextToken();
         if (nextToken.type != Token.Type.COLON) {
-            throw Util.sneakyThrow(new ParserException("Expected ':', but got:" + nextToken.str +
-                    " , at: " + nextToken.line + ", " + nextToken.column));
+            throw Util.sneakyThrow(new ParserException("Expected ':', but got:" + nextToken.str, nextToken));
         }
         ArrayList<Expr> body = readBlock(initTok);
         return new CatchExpr(initTok, exceptionType, exceptionName, body);
@@ -452,8 +460,7 @@ public class Parser {
         for (; ; ) {
             Token nextToken = nextToken();
             if (nextToken.type == Token.Type.EOF) {
-                throw Util.sneakyThrow(new ParserException("Unexpected eof" +
-                        " , at: " + nextToken.line + ", " + nextToken.column));
+                throw Util.runtimeException("EOF while reading");
             }
             if (nextToken.type == Token.Type.COLON) {
                 break;
@@ -461,8 +468,7 @@ public class Parser {
             unreadToken(nextToken);
             Expr e = readExpr();
             if (e == EofExpr.EOF_EXPR) {
-                throw Util.sneakyThrow(new ParserException("Unexpected eof" +
-                        " , at: " + nextToken.line + ", " + nextToken.column));
+                throw Util.runtimeException("EOF while reading");
             }
             args.add(e);
         }
@@ -480,8 +486,7 @@ public class Parser {
                 break;
             }
             if (nextToken.type == Token.Type.EOF) {
-                throw Util.sneakyThrow(new ParserException("Unexpected eof" +
-                        " , at: " + nextToken.line + ", " + nextToken.column));
+                throw Util.runtimeException("EOF while reading");
             }
             unreadToken(nextToken);
             Expr e = readExpr();
@@ -499,8 +504,7 @@ public class Parser {
         ArrayList<Expr> vec = new ArrayList<>();
         Expr nameExpr = readExpr();
         if (nameExpr == EofExpr.EOF_EXPR) {
-            throw Util.sneakyThrow(new ParserException("Unexpected eof" +
-                    " , at: " + nameExpr.initTok.line + ", " + nameExpr.initTok.column));
+            throw Util.runtimeException("EOF while reading");
         }
 
         Token nextToken = nextToken();
@@ -511,8 +515,7 @@ public class Parser {
         while (names.contains(nextToken.str)) {
             Token colonToken = nextToken();
             if (colonToken.type != Token.Type.COLON) {
-                throw Util.sneakyThrow(new ParserException("Expected ':', but got: " + colonToken.str +
-                        " , at: " + colonToken.line + ", " + colonToken.column));
+                throw Util.sneakyThrow(new ParserException("Expected ':', but got: " + colonToken.str, colonToken));
             }
             switch (nextToken.str) {
                 case "require":
@@ -576,7 +579,7 @@ public class Parser {
         // System.out.println(">>> add indentation def: " + indentation + "  initTok.column: " + initTok.column);
         Expr firstExpr = readExpr();
         if (firstExpr.initTok.type == Token.Type.EOF) {
-            throw Util.sneakyThrow(new ParserException("EOF while reading after: " + firstExpr.initTok.str));
+            throw Util.runtimeException("EOF while reading");
         }
         /*if (firstExpr.initTok.line == initTok.line) {
             body.add(firstExpr);
@@ -584,7 +587,7 @@ public class Parser {
         }*/
         if (firstExpr.initTok.column <= initTok.column) {
             throw Util.sneakyThrow(new ParserException("Bad indentation, for '"
-                    + firstExpr.initTok.str + "', should be nested to: " + initTok.str));
+                    + firstExpr.initTok.str + "', should be nested to: " + initTok.str, firstExpr.initTok));
         }
         body.add(firstExpr);
         addIndentation(firstExpr.initTok.column);
@@ -617,7 +620,7 @@ public class Parser {
             } else if (nextToken.column > firstExpr.initTok.column && nextToken.line != initTok.line) {
                 //System.out.println("NextExpr throw: " + nextToken);
                 Util.sneakyThrow(new ParserException("Bad indentation, greater than "
-                        + firstExpr.initTok.column + ": " + nextToken.str));
+                        + firstExpr.initTok.column + ": " + nextToken.str, nextToken));
             } else /*if (!checkIndentation(nextToken.column)) {
                 // System.out.println(">>: checkIndentation: " + indentation);
                 // popIndentation();
@@ -698,7 +701,7 @@ public class Parser {
             if (e == EofExpr.EOF_EXPR) break;
             if (e.initTok.column != 1) {
                 Util.sneakyThrow(new ParserException("Top level expression should start at column 1, but got: '"
-                        + e.initTok.str + "' at line: " + e.initTok.line + ", column: " + e.initTok.column));
+                        + e.initTok.str, e.initTok));
             }
             arr.add(e);
         }
