@@ -231,7 +231,8 @@ public class Parser {
         if (t.type == Token.Type.DEREF ||
                 t.type == Token.Type.QUOTE ||
                 t.type == Token.Type.UNQUOTE ||
-                t.type == Token.Type.SYNTAX_QUOTE) {
+                t.type == Token.Type.SYNTAX_QUOTE ||
+                t.type == Token.Type.VAR_QUOTE) {
             Expr nextExpr = readExpr();
             if (nextExpr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             return new UnaryExpr(t, nextExpr);
@@ -307,7 +308,7 @@ public class Parser {
             DelimitedListResult res = readDelimitedList(Token.Type.RPAREN);
             return new ParensExpr(t, res.a, res.last.initTok.callable);
         }
-        if (t.type == Token.Type.EOF){
+        if (t.type == Token.Type.EOF) {
             throw Util.runtimeException("EOF while reading");
         }
         Util.sneakyThrow(new ParserException("Unexpected token: " + t.str, t));

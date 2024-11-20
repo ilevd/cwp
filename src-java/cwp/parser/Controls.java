@@ -31,6 +31,7 @@ public class Controls {
 
         VEC.add("let");
         VEC.add("for");
+        VEC.add("loop");
         VEC.add("doseq");
         VEC.add("dotimes");
         VEC.add("binding");
@@ -40,7 +41,7 @@ public class Controls {
         VEC.add("when-let");
         VEC.add("when-first");
 
-        MAP.add("with-binding");
+        MAP.add("with-bindings");
         MAP.add("with-redefs-fn");
     }
 
