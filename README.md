@@ -15,7 +15,7 @@ Features:
 * In most cases separators: `,` - comma and `to`- keyword are optional
 * Readable Clojure code generation
 
-Being just a syntax for Clojure, it provides what Clojure has:
+Being just a syntax for Clojure, it provides access to Clojure features such as:
 * Functional programming - immutable data structures, higher-order functions...
 * Concurrent primitives
 * Clojure/Java (JVM) ecosystem with a lot of libraries
