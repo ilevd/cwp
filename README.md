@@ -6,8 +6,8 @@
 
 Indentation-based syntax for [Clojure](https://clojure.org/).
 
-It is a project for those, who would like to deep into practical dynamic functional programming language - Clojure,
-but **don't like parentheses**. It provides familiar syntax, so it's easy to switch to it, from e.g. Python.
+Clojure is a practical dynamic functional programming language.
+This project provides familiar syntax, so it's easy to switch to it, from e.g. Python.
 
 Features:
 * Indentation-based, Python-like syntax
