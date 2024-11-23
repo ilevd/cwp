@@ -176,7 +176,7 @@ Comparing with:
   x + 1, fn x: x * 2] // => [(fn [x] (+ x 1) (fn [x] (* x 2)))]
 ```
 
-Code blocks are used in various structures, such as `ns` declaration, `if`-`else`, `let` and others.
+Code blocks are used in various code structures (constructs), such as `ns` declaration, `if`-`else`, `let` and others.
 
 ### Special structures
 
