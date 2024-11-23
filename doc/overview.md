@@ -130,4 +130,4 @@ pmap(fn x: x * x, range(10))  // (0 1 4 9 16 25 36 49 64 81)
 ## What's next?
 
 * [clojure.org](https://clojure.org/) - to read more about Clojure
-* [Syntax and transpiling](doc/syntax-and-transpiling.md) - to read more about CWP syntax and transpiling
+* [Syntax and transpiling](syntax-and-transpiling.md) - to read more about CWP syntax and transpiling
