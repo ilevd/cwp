@@ -1,6 +1,5 @@
 (ns leiningen.cwp
   (:require [clojure.java.io :as io]
-            [clojure.string :as s]
             [clojure.string :as str]
             [zprint.core :as zp])
   (:import (cwp.parser Parser)))
@@ -13,7 +12,7 @@
 (defn ends-with-ext? [s]
   (->> (keys ext-mappings)
     (map #(str "." %))
-    (some #(s/ends-with? s %))))
+    (some #(str/ends-with? s %))))
 
 (defn ext-reg []
   (->> (keys ext-mappings)
