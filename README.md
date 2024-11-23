@@ -108,6 +108,7 @@ def load-data-reader-file(mappings, ^java.net.URL url):
 
 ## Documentation
 * [Overview](doc/overview.md)
+* [Syntax and transpiling](doc/syntax-and-transpiling.md)
 
 
 ## Usage
