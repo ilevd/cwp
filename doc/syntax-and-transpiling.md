@@ -44,7 +44,7 @@ Basic expressions are transpiled to themselves:
 
 ### Data structures
 
-Vectors, maps, sets are transpiled to themselves:
+Vectors, maps, sets are declared in Clojure style:
 
 | Type       | Expression   |  Transpiled  |   
 |------------|--------------|:------------:|
