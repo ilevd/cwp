@@ -23,6 +23,39 @@ Being just a syntax for Clojure, it provides access to Clojure features such as:
 It's a transpiler and a [Leiningen](https://leiningen.org/) plugin.
 
 ## Examples
+
+FizzBuzz
+
+```scala 
+doseq i to range(1, 101):
+  cond:
+    mod(i, 3) = 0 and mod(i, 5) = 0 to print("FizzBuzz")
+    mod(i, 3) = 0 to print("Fizz")
+    mod(i, 5) = 0 to print("Buzz")
+    :else print(i)
+```
+
+Caesar cipher
+
+```scala 
+def encode(^String s, ^long i):
+  let sb StringBuilder.():
+    doseq c s:
+      cond:
+        int(c) >= int(\a) and int(c) <= int(\z) 
+        .append(sb, char(int(\a) + mod(int(c) - int(\a) + i, 26)))
+        
+        int(c) >= int(\A) and int(c) <= int(\Z) 
+        .append(sb, char(int(\A) + mod(int(c) - int(\A) + i, 26)))
+       
+        :else .append(sb, c)
+    .toString(sb)
+
+def decode(^String s, ^long i):
+  encode(s, 26 - i)
+```
+
+
 Data manipulation 
 
 ```scala 
