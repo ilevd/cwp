@@ -30,6 +30,7 @@ public class Controls {
         FLAT.add("when");
 
         VEC.add("let");
+        VEC.add("letfn");
         VEC.add("for");
         VEC.add("loop");
         VEC.add("doseq");
