@@ -156,7 +156,7 @@ Block expression can be at the same line as a starting symbol:
 <starting-symbol> [<expr_1> <expr_2> ...]? : <block_expr_1>
                                              <block_expr_2>
 ```
-There can be multiple block expressions started from the second line:
+There can be multiple block expressions one a line starting from the second line:
 
 ```
 <starting-symbol> [<expr_1> <expr_2> ...]? :
