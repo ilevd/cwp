@@ -5,7 +5,6 @@ import cwp.ast.*;
 
 import cwp.lexer.LexerReader;
 import cwp.lexer.Token;
-import cwp.lexer.readers.Str;
 
 import java.util.*;
 
@@ -45,22 +44,7 @@ public class Parser {
         return precedence.getOrDefault(s, -1);
     }
 
-  /*
-   enum Precedence {
-        LOWEST,
-        PIPE,  // |> , |>>
-        OR,
-        AND,
-        NOT,
-        COMPARISON, //>, <, >= ,<=, =, ==, !=,
-        SUM,       // +, -
-        PRODUCT   // *, /
-        // PREFIX
-        // CALL
-    }
-*/
 
-    //CharReader charReader;
     LexerReader lexerReader;
     ArrayList<Integer> indentation = new ArrayList<Integer>();
     int curLine = 1;
@@ -94,9 +78,7 @@ public class Parser {
 
 
     public Parser(String s) {
-        //charReader = new CharReader(s);
         lexerReader = new LexerReader(s);
-        // indentation.add(1);
     }
 
     public void unreadToken(Token t) {
@@ -104,16 +86,10 @@ public class Parser {
     }
 
     public Token nextTokenWithSep() {
-        //return LexerReader.read(charReader);
         return lexerReader.read();
     }
 
     public Token nextToken() {
-//        Token t = LexerReader.read(charReader);
-//        while (t.type == Token.Type.COMMA || t.type == Token.Type.TO) {
-//            t = LexerReader.read(charReader);
-//        }
-//        return t;
         Token t = lexerReader.read();
         while (t.type == Token.Type.COMMA || t.type == Token.Type.TO) {
             t = lexerReader.read();
@@ -169,35 +145,12 @@ public class Parser {
         if (t.type == Token.Type.SYMBOL && Controls.isMap(t.str)) {
             return readFlatCotrol(t, Controls.Type.MAP);
         }
-        // Expr e = readBaseExpr(t);
-        //Expr e = readUnaryExpr(t);
         Expr e = readInfixExpr(t, LOWEST);
-        //System.out.println(">>>> " + e);
         if (e == null) {
             throw Util.sneakyThrow(new ParserException("Unexpected token: " + t.str, t));
         }
         return e;
     }
-
-
-//    public Expr readInfixExpr(Token t, int prevPrecedence) {
-//        Expr leftExpr = readUnaryExpr(t);
-//        Token opToken = nextTokenWithSep();
-//        //System.out.println(">>readInfixExpr " + leftExpr + " " + opToken + " " + prevPrecedence + " " + (prevPrecedence >= SUM));
-//        for (; ; ) {
-//            int curPrecedence = getPrecedence(opToken.str);
-//            if (curPrecedence == -1 || prevPrecedence >= curPrecedence) {
-//                unreadToken(opToken);
-//                break;
-//            }
-//            //System.out.println(">>curPrec " + curPrecedence + " " + opToken.str);
-//            // curPrecedence > prevPrecedence
-//            Expr rightExpr = readInfixExpr(nextToken(), curPrecedence);
-//            leftExpr = new InfixExpr(opToken, leftExpr, rightExpr);
-//            opToken = nextTokenWithSep();
-//        }
-//        return leftExpr;
-//    }
 
     public Expr readInfixExpr(Token t, int prevPrecedence) {
         Expr firstExpr = readUnaryExpr(t);
@@ -244,7 +197,6 @@ public class Parser {
             if (nextExpr.initTok.type == Token.Type.EOF) throw Util.runtimeException("EOF while reading");
             return new UnaryExpr(t, nextExpr, true);
         }
-        //return readBaseExpr(t);
         return readFunctionCallExpr(t);
     }
 
@@ -673,25 +625,20 @@ public class Parser {
         ArrayList<Token> arr = new ArrayList<Token>();
         //Token t = LexerReader.read(charReader);
         Token t = lexerReader.read();
-
         curLine = t.line;
         if (t.column != lastIndentation()) {
             Util.runtimeException("EOF while reading character");
         }
-
         while (t.type != Token.Type.EOF) {
             arr.add(t);
-
             // t = LexerReader.read(charReader);
             t = lexerReader.read();
             if (t.type == Token.Type.COLON) {
 
             }
-
         }
         arr.add(t);
         return arr;
-
     }
 
     public static ArrayList<Expr> readString(String s) {
