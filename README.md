@@ -22,6 +22,10 @@ Being just a syntax for Clojure, it provides access to Clojure features such as:
 
 It's a transpiler and a [Leiningen](https://leiningen.org/) plugin.
 
+## Documentation
+* [Overview](doc/overview.md)
+* [Syntax and transpiling](doc/syntax-and-transpiling.md)
+
 ## Examples
 
 FizzBuzz
@@ -137,12 +141,6 @@ def load-data-reader-file(mappings, ^java.net.URL url):
                mappings,
                new-mappings)
 ```
-
-
-## Documentation
-* [Overview](doc/overview.md)
-* [Syntax and transpiling](doc/syntax-and-transpiling.md)
-
 
 ## Usage
 
